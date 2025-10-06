@@ -1,12 +1,25 @@
 # ShipIt 🚀
 
+
 > Your AI-powered DevOps assistant. From code to cloud, instantly.
 
 ## Problem Statement
 
 Deploying modern web applications involves numerous complex steps, from provisioning servers and configuring networks to installing dependencies and setting up web servers. This DevOps overhead is time-consuming, error-prone, and a significant distraction for developers who just want to ship their code.
 
+Deploying modern web applications involves numerous complex steps, from provisioning servers and configuring networks to installing dependencies and setting up web servers. This DevOps overhead is time-consuming, error-prone, and a significant distraction for developers who just want to ship their code.
+
 ## Features
+
+**ShipIt** is an agentic AI platform designed to automate the entire deployment lifecycle, from simple static sites to complex, multi-service applications.
+
+* **User Accounts & History:** Register and log in to manage your deployments and view your project history.
+* **Automated AWS Provisioning:** Intelligently creates and configures EC2 instances on AWS, including necessary security groups and networking.
+* **Multi-Instance Deployments:** Analyzes complex repositories and can provision separate EC2 instances for frontend and backend services.
+* **Multi-Stack Intelligence:** Automatically analyzes a repository to detect the tech stack (Node.js, Python, etc.) and applies the correct deployment procedure.
+* **Resilient Self-Correction:** The core of ShipIt. The agent can diagnose and recover from common deployment errors without human intervention.
+* **Live Deployment Logs:** Watch the entire deployment process in real-time through a live log streamed directly to your browser.
+* **CI/CD Pipeline Generation:** After a successful deployment, the agent can commit a GitHub Actions workflow file back to your repository to enable continuous deployment on future code pushes.
 
 **ShipIt** is an agentic AI platform designed to automate the entire deployment lifecycle, from simple static sites to complex, multi-service applications.
 
@@ -39,11 +52,12 @@ ShipIt is built on a scalable, asynchronous architecture to handle multiple conc
 
 ## Setup & Installation
 
+
 Follow these steps to set up the project locally.
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/shipit.git](https://github.com/your-username/shipit.git)
+    git clone https://github.com/Satyamyaduvanshi/ShipIt.git
     cd shipit
     ```
 2.  **Backend Setup:**
@@ -57,8 +71,18 @@ Follow these steps to set up the project locally.
     npm install
     ```
 4.  **Configure Environment Variables:**
+4.  **Configure Environment Variables:**
     Create a `.env` file inside the `backend/` directory and add your secret keys:
     ```
+    # AWS Credentials
+    AWS_ACCESS_KEY_ID="your_aws_access_key"
+    AWS_SECRET_ACCESS_KEY="your_aws_secret_key"
+
+    # Database Connection
+    DATABASE_URL="postgresql://user:password@host:port/dbname"
+
+    # LLM API Key (from Groq, Replicate, etc.)
+    LL_API_KEY="your_llm_api_key"
     # AWS Credentials
     AWS_ACCESS_KEY_ID="your_aws_access_key"
     AWS_SECRET_ACCESS_KEY="your_aws_secret_key"
@@ -71,6 +95,23 @@ Follow these steps to set up the project locally.
     ```
 
 ## Usage
+
+After setting up the environment, you can run the frontend and backend servers separately.
+
+* **Run Backend:**
+    ```bash
+    cd backend
+    flask run
+    # In a separate terminal, run the Celery worker
+    celery -A your_app.celery worker --loglevel=info
+    ```
+* **Run Frontend:**
+    ```bash
+    cd frontend
+    npm run dev
+    ```
+```eof
+
 
 After setting up the environment, you can run the frontend and backend servers separately.
 
