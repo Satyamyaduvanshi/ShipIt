@@ -1,0 +1,18 @@
+```
+
+### How to Test It (using `curl` or Postman)
+
+Since these are `POST` requests, you can't test them just by putting the URL in your browser. You need to send data.
+
+**1. Test Registration:**
+```bash
+curl -X POST http://localhost:5001/register \
+     -H "Content-Type: application/json" \
+     -d '{"username": "testuser", "email": "test@example.com", "password": "mypassword"}'
+```
+
+**2. Test Login:**
+```bash
+curl -X POST http://localhost:5001/login \
+     -H "Content-Type: application/json" \
+     -d '{"email": "test@example.com", "password": "mypassword"}'
