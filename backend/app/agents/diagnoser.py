@@ -1,4 +1,4 @@
-# app/agents/diagnoser.py
+
 import json
 
 class DiagnoserAgent:
@@ -11,19 +11,19 @@ class DiagnoserAgent:
         """
         print(f"🧠 AI Analyzing Project Structure...")
 
-        # 1. NODE.JS DETECTION
+        
         if 'package.json' in file_list:
             print("🧠 Detected Node.js Project")
             install_cmd = "npm install"
-            start_cmd = "node index.js" # Fallback
+            start_cmd = "node index.js"
             
-            # Smart Script Detection
+           
             if package_json_content:
                 try:
                     pkg = json.loads(package_json_content)
                     scripts = pkg.get('scripts', {})
                     
-                    # Priority: dev -> start -> node index.js
+
                     if 'dev' in scripts:
                         start_cmd = "npm run dev"
                     elif 'start' in scripts:
@@ -39,7 +39,6 @@ class DiagnoserAgent:
                 "start_cmd": start_cmd
             }
 
-        # 2. PYTHON DETECTION
         if 'requirements.txt' in file_list:
             print("🧠 Detected Python Project")
             return {
