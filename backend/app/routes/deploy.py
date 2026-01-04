@@ -1,7 +1,7 @@
-# app/routes/deploy.py
+
 from flask import Blueprint, request, jsonify
 from app.db import db, connect_db
-from app.tasks.worker import deploy_task  # Import the Celery task
+from app.tasks.worker import deploy_task  
 
 deploy_bp = Blueprint('deploy', __name__)
 
@@ -10,7 +10,7 @@ def trigger_deployment():
     data = request.json
     user_id = data.get('user_id')
     repo_url = data.get('repo_url')
-    ssh_details = data.get('ssh_details') # {hostname, username, private_key}
+    ssh_details = data.get('ssh_details')
 
     if not all([user_id, repo_url, ssh_details]):
         return jsonify({"error": "Missing required fields"}), 400
@@ -18,7 +18,7 @@ def trigger_deployment():
     connect_db()
 
     try:
-        # 1. Create Record in DB
+       
         deployment = db.deployment.create(data={
             'userId': user_id,
             'repo_url': repo_url,
@@ -26,14 +26,14 @@ def trigger_deployment():
             'status': 'queued'
         })
 
-        # 2. Trigger the Celery Worker (Async)
+        
         task = deploy_task.delay(
             deployment_id=deployment.id,
             repo_url=repo_url,
             ssh_details=ssh_details
         )
 
-        # 3. Save Task ID to DB
+       
         db.deployment.update(
             where={'id': deployment.id},
             data={'celery_task_id': task.id}

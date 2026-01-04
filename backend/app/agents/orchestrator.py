@@ -1,4 +1,4 @@
-# app/agents/orchestrator.py
+
 from app.agents.deployer import DeployerAgent
 from app.agents.diagnoser import DiagnoserAgent
 import time
@@ -23,11 +23,10 @@ class OrchestratorAgent:
     def run(self):
         self.log("🚀 Orchestrator started.")
         
-        # 1. CONNECT
+      
         self.log("🔌 Connecting to server...")
         if not self.deployer.connect(): return False
 
-        # 2. CLEAN & CLONE
         self.log("Mw Cleaning previous deployment...")
         self.deployer.execute("rm -rf app")
         
@@ -35,19 +34,18 @@ class OrchestratorAgent:
         _, _, code = self.deployer.execute(f"git clone {self.repo_url} app")
         if code != 0: return False
 
-        # --- 🧠 STEP 3: IDENTIFY PROJECT AI ---
         self.log("🧠 Analyzing project structure...")
         
-        # A. List files to detect language
+
         files_str, _, _ = self.deployer.execute("ls app")
         file_list = files_str.split('\n')
         
-        # B. Read package.json for specific scripts
+
         pkg_content = None
         if 'package.json' in file_list:
             pkg_content, _, _ = self.deployer.execute("cat app/package.json")
 
-        # C. AI Decision
+
         stack_info = self.diagnoser.detect_stack(file_list, pkg_content)
         
         if not stack_info:
@@ -59,18 +57,18 @@ class OrchestratorAgent:
         start_cmd = f"cd app && timeout 10 {stack_info['start_cmd']}"
         # --------------------------------------
 
-        # 4. INSTALL (Dynamic)
+
         self.log(f"🛠️ Installing: {stack_info['install_cmd']}...")
         _, err, code = self.deployer.execute(install_cmd)
         
         if code != 0:
-            # Trigger Self-Healing if install fails (e.g. missing Node)
+           
             if self.attempt_fix(err, install_cmd):
                 pass
             else:
                 return False
 
-        # 5. START (Dynamic)
+        
         self.log(f"🚀 Starting: {stack_info['start_cmd']}...")
         _, err, code = self.deployer.execute(start_cmd)
         

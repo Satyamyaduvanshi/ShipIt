@@ -17,15 +17,15 @@ def register():
     connect_db()
 
     try:
-        # Check if user exists
+       
         existing = db.user.find_first(where={'email': email})
         if existing:
             return jsonify({"error": "User already exists"}), 400
 
-        # Hash Password
+        
         hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-        # Create User
+       
         user = db.user.create(data={
             'username': username,
             'email': email,

@@ -1,6 +1,6 @@
-# app/agents/deployer.py
+
 import paramiko
-import io  # <--- WE ADDED THIS IMPORT
+import io  
 
 class DeployerAgent:
     def __init__(self, ssh_details):
@@ -15,17 +15,15 @@ class DeployerAgent:
     def connect(self):
         """Establishes the SSH connection"""
         try:
-            # Create SSH Client
+            
             self.client = paramiko.SSHClient()
             self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-            # --- KEY FIX STARTS HERE ---
-            # Paramiko needs a file-like object, not a raw string
             if 'BEGIN' in self.key_str:
                 key_file_obj = io.StringIO(self.key_str)
                 pkey = paramiko.RSAKey.from_private_key(key_file_obj)
             else:
-                # Assume it's a file path if no 'BEGIN' found
+              
                 pkey = paramiko.RSAKey.from_private_key_file(self.key_str)
             # ---------------------------
 
@@ -36,8 +34,8 @@ class DeployerAgent:
                 username=self.username,
                 pkey=pkey,
                 timeout=10,
-                look_for_keys=False,  # Disable looking in ~/.ssh/
-                allow_agent=False     # Disable using local SSH agent
+                look_for_keys=False,  
+                allow_agent=False     
             )
             return True
         except Exception as e:
@@ -56,10 +54,10 @@ class DeployerAgent:
             print(f"💻 Executing: {command}")
             stdin, stdout, stderr = self.client.exec_command(command)
             
-            # Wait for command to finish
+         
             exit_code = stdout.channel.recv_exit_status()
             
-            # Read output
+           
             out = stdout.read().decode().strip()
             err = stderr.read().decode().strip()
             
